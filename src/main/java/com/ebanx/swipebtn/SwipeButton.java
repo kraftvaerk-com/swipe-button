@@ -319,7 +319,7 @@ public class SwipeButton extends RelativeLayout {
                         } else {
                             if (swipeButtonInner.getX() + swipeButtonInner.getWidth() > getWidth() * 0.9) {
                                 if (hasActivationState) {
-                                    expandButton();
+                                    onActiveListener.onActive();
                                 } else if (onActiveListener != null) {
                                     onActiveListener.onActive();
                                     moveButtonBack();
@@ -335,55 +335,6 @@ public class SwipeButton extends RelativeLayout {
                 return false;
             }
         };
-    }
-
-    private void expandButton() {
-        final ValueAnimator positionAnimator =
-                ValueAnimator.ofFloat(swipeButtonInner.getX(), 0);
-        positionAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float x = (Float) positionAnimator.getAnimatedValue();
-                swipeButtonInner.setX(x);
-            }
-        });
-
-
-        final ValueAnimator widthAnimator = ValueAnimator.ofInt(
-                swipeButtonInner.getWidth(),
-                getWidth());
-
-        widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                ViewGroup.LayoutParams params = swipeButtonInner.getLayoutParams();
-                params.width = (Integer) widthAnimator.getAnimatedValue();
-                swipeButtonInner.setLayoutParams(params);
-            }
-        });
-
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-
-                active = true;
-                swipeButtonInner.setImageDrawable(enabledDrawable);
-
-                if (onStateChangeListener != null) {
-                    onStateChangeListener.onStateChange(active);
-                }
-
-                if (onActiveListener != null) {
-                    onActiveListener.onActive();
-                }
-            }
-        });
-
-        animatorSet.playTogether(positionAnimator, widthAnimator);
-        animatorSet.start();
     }
 
     private void moveButtonBack() {
@@ -403,7 +354,7 @@ public class SwipeButton extends RelativeLayout {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                if (layer!=null) {
+                if (layer != null) {
                     layer.setVisibility(View.GONE);
                 }
             }
@@ -449,7 +400,7 @@ public class SwipeButton extends RelativeLayout {
                 if (onStateChangeListener != null) {
                     onStateChangeListener.onStateChange(active);
                 }
-                if (layer!=null) {
+                if (layer != null) {
                     layer.setVisibility(View.GONE);
                 }
             }
@@ -505,14 +456,6 @@ public class SwipeButton extends RelativeLayout {
     public void setTrailBackground(@NonNull Drawable trailingDrawable) {
         if (trailEnabled) {
             layer.setBackground(trailingDrawable);
-        }
-    }
-
-    public void toggleState() {
-        if (isActive()) {
-            collapseButton();
-        } else {
-            expandButton();
         }
     }
 
