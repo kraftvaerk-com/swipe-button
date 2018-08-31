@@ -35,7 +35,7 @@ public class SwipeButton extends RelativeLayout {
     private ImageView swipeButtonInner;
     private float initialX;
     private boolean active;
-    private TextView centerText;
+    public TextView centerText;
     private ViewGroup background;
 
     private Drawable disabledDrawable;
